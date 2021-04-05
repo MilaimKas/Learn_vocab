@@ -1,0 +1,9 @@
+{"word":"aengstlich", "theme":"gefühle", "article":"", "translation":"anxieux"}
+{"word":"aufgeschlosen", "theme":"gefühle", "translation":"ouvert d'esprit"}
+{"word":"bescheiden", "theme":"modeste", "theme":"gefühle"}
+{"word":"besorgt", "translation":"inquiet", "theme":"gefühle"}
+{"word":"sorglos", "translation":"sous soucis", "translation":"gefühle"}
+{"word":"Angst", "article":"die", "plural":"Ängste", "translation":"la peur"}
+{"word":"Mut", "article":"der", "translation":"le courage"}
+{"word":"Fleiss", "article":"der", "translation":"le zèle"}
+{"word": "Glaubensatz", "translation": "dogme", "synonyme": "croyance", "article": "der", "theme": ""}
