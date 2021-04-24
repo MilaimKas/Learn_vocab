@@ -1,14 +1,13 @@
 import random
 import json
 
-# keys
-w = "word"
-t  = "Theme"
-a  = "artikel"
-ub  = "Übersetzung französich"
-s  = "Synonyme"
-ex  = "Beispiel"
-plu  = "plural"
+w = "wort"
+t = "thema"
+a = "artikel"
+ub = "übersetzung französich"
+s = "synonyme"
+ex = "beispiel"
+plu = "plural"
 
 # WS List class
 class WS():
@@ -16,8 +15,11 @@ class WS():
         '''
         List of words
         --> my_list.txt: list of dictionary variables containing keys
-        --> extra_list: simple list of words (with article)
+        --> extra_list: additional simple list of words (with article)
         '''
+
+        # keys
+        self.keys = [w, t, a, ub, s, ex, plu]
 
         # initialize list of words found in my_list.txt
         self.my_list = []
@@ -39,7 +41,7 @@ class WS():
             for line in Lines:
                 self.my_list.append(json.loads(line.strip()))
 
-    def add_extra_list(self,file):
+    def add_extra_list(self, file):
         '''
         add additional list of words from file
         :return:
@@ -49,7 +51,7 @@ class WS():
             self.extra_list.extend([line.rstrip() for line in f])
 
 
-    def add_word(self,word,item=None):
+    def add_word(self, word, item=None):
         '''
         Update my_list.txt with a new word and related keys,
         or add one or more additional keys to an already stored word
@@ -93,3 +95,5 @@ if __name__ == '__main__':
     print(len(WS.my_list[0]))
     print(WS.my_list)
     WS.add_word("leichtsinnig", [('translation','inconsidéré'), ('synonyme', 'fahrlässig')])
+    WS.init_mylist()
+    print(WS.my_list[-1])

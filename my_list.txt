@@ -1,9 +1,9 @@
-{"word":"aengstlich", "theme":"gefühle", "article":"", "translation":"anxieux"}
-{"word":"aufgeschlosen", "theme":"gefühle", "translation":"ouvert d'esprit"}
-{"word":"bescheiden", "theme":"modeste", "theme":"gefühle"}
-{"word":"besorgt", "translation":"inquiet", "theme":"gefühle"}
-{"word":"sorglos", "translation":"sous soucis", "translation":"gefühle"}
-{"word":"Angst", "article":"die", "plural":"Ängste", "translation":"la peur"}
-{"word":"Mut", "article":"der", "translation":"le courage"}
-{"word":"Fleiss", "article":"der", "translation":"le zèle"}
-{"word": "Glaubensatz", "translation": "dogme", "synonyme": "croyance", "article": "der", "theme": ""}
+{"wort":"aengstlich", "thema":"gefühle", "artikel":"", "übersetzung französich":"anxieux", "beispiel":""}
+{"wort":"aufgeschlosen", "thema":"gefühle", "übersetzung französich":"ouvert d'esprit", "beispiel":""}
+{"wort":"bescheiden", "übersetzung französich":"modeste", "thema":"gefühle", "beispiel":""}
+{"wort":"besorgt", "übersetzung französich":"inquiet", "thema":"gefühle", "beispiel":""}
+{"wort":"sorglos", "übersetzung französich":"sous soucis", "übersetzung französich":"gefühle", "beispiel":""}
+{"wort":"Angst", "artikel":"die", "plural":"Ängste", "übersetzung französich":"la peur", "beispiel":""}
+{"wort":"Mut", "artikel":"der", "übersetzung französich":"le courage", "beispiel":""}
+{"wort":"Fleiss", "artikel":"der", "übersetzung französich":"le zèle", "beispiel":""}
+{"wort": "Glaubensatz", "übersetzung französich": "dogme", "synonyme": "croyance", "artikel":"der", "thema":"", "beispiel":""}
