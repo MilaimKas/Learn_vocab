@@ -6,3 +6,8 @@
 # Ordered fields
 # word,translation,type,article,plural,theme,example,synonym
 #
+ängstlich,anxieux,adjectiv, , ,emotion, , ,
+aufgeschlosen,ouvert d'esprit,adjectiv, , ,emotion, , ,
+bescheiden,modeste,adjectiv, , ,emotion, , ,
+besorgt,inquiet,adjectiv, , ,emotion, , ,
+Angst,peur,noun,die,Ängste,emotion, , ,
