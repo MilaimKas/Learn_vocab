@@ -1,16 +1,14 @@
 '''
 
-todo: make display list for add new word option
-todo: initialze my_list file if it does not exist
-todo: Make my_list a table with column corresponding to keys, with WS class creating list of dict
-todo: google translate option
-todo:
+
+
 
 '''
 
 import VOC_class
 import PySimpleGUI as sg
 from tabulate import tabulate
+from googletrans import Translator
 
 ##########################################
 # initializing vocabulary list and class
@@ -18,6 +16,13 @@ from tabulate import tabulate
 
 WS = VOC_class.VOC()
 keys = WS.keys
+
+###################################
+# Language source for googletrans
+###################################
+
+lang_src = 'french'
+lang_dest = 'german'
 
 ############################
 # initializing GUI window
@@ -30,26 +35,29 @@ new_word_layout = []
 for k in keys:
     new_word_layout.append([sg.Text(k+' :', size=(10,1)), sg.InputText(key=k)])
 
-layout = [
-        [sg.Text("TEST YOUR SKILLS", size=(70,1), justification='center', relief=sg.RELIEF_RIDGE)],
-        [sg.Button("Generate word", key="-generate-"), sg.In(enable_events=True, key="-word_to_translate-")],
-        [sg.Text("Enter translation: "), sg.InputText(), sg.Button('Check', key="-check-")],
-        [sg.Text('', key='-answer-')],
+layout =[
+        [sg.Text("TEST YOUR SKILLS", size=(35, 1), justification='center', relief=sg.RELIEF_RIDGE)],
+        [sg.Button("Generate word", key="-generate-"), sg.In(enable_events=True, key="-word_to_translate-", size=(35, 1))],
+        [sg.Text("Enter translation: "), sg.InputText(size=(35, 1)), sg.Button('Check', key="-check-")],
+        [sg.Text('', key='-answer-', size=(35, 1))],
+        [sg.Text('')],
+        [sg.Button("ASK GOOGLE", enable_events=True, key='-google-'), sg.In(key='-google_to_translate-', size=(35, 1))],
+        [sg.Text('', key='-google_answer-', size=(35, 1))],
         [sg.Text('')],
         [sg.HSeparator()],
         [sg.Text('')],
-        [sg.Text("ADD A NEW WORD TO YOUR PERSONAL LIST", size=(70,1), justification='center',relief=sg.RELIEF_RIDGE)],
+        [sg.Text("ADD A NEW WORD TO YOUR PERSONAL LIST", size=(70, 1), justification='center',relief=sg.RELIEF_RIDGE)],
         [sg.Frame(title="New word to add", layout=new_word_layout), sg.Button('ADD', key="-add_word-")],
         [sg.Text('')],
         [sg.HSeparator()],
         [sg.Text('')],
-        [sg.Text("DISPLAY YOUR PERSONAL LIST", size=(70,1), justification='center',relief=sg.RELIEF_RIDGE)],
+        [sg.Text("DISPLAY YOUR PERSONAL LIST", size=(70, 1), justification='center',relief=sg.RELIEF_RIDGE)],
         [sg.Button('SHOW LIST', enable_events=True, key='-show_list-')],
         [sg.Text('')],
         [sg.HSeparator()],
         [sg.Text('')],
         [sg.Cancel("Exit")],
-]
+        ]
 # Create the window
 window = sg.Window("Build vocabulary list", layout)
 
@@ -67,7 +75,7 @@ while True:
     # remove printed message
     window['-answer-'].update('')
 
-    #  Translate
+    #  Translate from list
     # ----------------------------
 
     if event == "-generate-":
@@ -77,7 +85,7 @@ while True:
 
     if event == "-check-":
         if word is None:
-            sg.popup("You have to generate a word to translate before given a translation !!")
+            sg.popup("You have to generate a word to translate before given a translation !!", title='Error')
         else:
             # check if translation is correct
             if values[0] in word[keys[1]]:
@@ -92,6 +100,17 @@ while True:
                 text_out = word[keys[1]]+word[keys[7]]
                 window['-answer-'].update('Incorrect, the translation is/are: '+text_out)
 
+    # Google translate
+    # -----------------------
+
+    if event == "-google-":
+        if len(window["-google_to_translate-"].get()) == 0:
+            sg.popup('You have to enter a word to translate !', title='Error')
+        else:
+            # translation is a classe that contains several information in addtion to the translation
+            translation = Translator().translate(str(window['-google_to_translate-'].get()), src=lang_src, dest=lang_dest)
+            window['-google_answer-'].update('Translation: '+translation.text)
+
     # Add word to my_list
     # -----------------------
 
@@ -99,7 +118,7 @@ while True:
 
         # if no word is given
         if len(window[keys[0]].get()) == 0:
-            sg.popup('At least a new word must be given in order to add a new item to your list !')
+            sg.popup('At least a new word must be given in order to add a new item to your list !', title='Error')
 
         else:
             new_word = []
