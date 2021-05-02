@@ -104,6 +104,18 @@ while True:
         lang_src = 'german'
         lang_dest = 'french'
 
+    # Show Readme file
+    if event == '&About':
+        text = open("README.md", 'r').read()
+        new_window = sg.Window('About',
+                               [
+                                   [sg.Text(text, text_color='white')]
+                               ])
+        while True:
+            ev, val = new_window.read()
+            if ev == sg.WIN_CLOSED:
+                break
+
     #  Translate from list
     # ----------------------------
 
@@ -216,7 +228,8 @@ while True:
     if event == "-show_list-":
         # todo: sort my_list alphabetically
         table = tabulate(WS.my_list, headers=keys, tablefmt='rst')
-        sg.Window('My list of vocabulary in alphabetical order', [[sg.Text(table, font='Courier')]]).read()
+        sg.Window('My list of vocabulary in alphabetical order',
+                  [[sg.Text(table, font='Courier', text_color='white')]]).read()
 
     # close window
     if event == sg.WIN_CLOSED or event == "Exit":

@@ -1,4 +1,6 @@
 # Learn_vocab
+Written by Milaim Kas: milaim.kas@gmail.com 
+
 Application for German-French vocabulary with simple GUI using the googletrans, mlconj3 and duden package.
 - Build personal list of vocabular
 - Show conjuation table for given verb
