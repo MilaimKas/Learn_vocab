@@ -1,5 +1,8 @@
+'''
+Class containing the personal list and related functions
+'''
+
 import random
-import json
 import re
 
 field_sep = "[,:;\t]"
@@ -58,6 +61,7 @@ class VOC():
         self.extra_list = []
 
     def add_extra_list(self, f_extra, key):
+        # todo: add possibility to change already stored world
         '''
         add additional list of words from file with given keys
         :return:
@@ -113,7 +117,7 @@ class VOC():
 
             # print new word in my_list_example.txt
             with open(self.fout, 'a') as file:
-                file.write(','.join(add_word)+'\n')
+                file.write(','.join(add_word)+','+'\n')
 
             # append my_list
             self.my_list.append(add_word)

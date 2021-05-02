@@ -1,14 +1,28 @@
 '''
+Main program
 
+additional features to look at:
+- pattern package: https://stackabuse.com/python-for-nlp-introduction-to-the-pattern-library/
+- German semantic library: https://pypi.org/project/pygermanet/
+                        and https://gist.github.com/amotl/ad5ecda4579ad60bb6497b7ddabc8ad0
+- mlconjug package: https://pypi.org/project/mlconjug/
+- duden: https://github.com/radomirbosak/duden/blob/master/docs/usage.md
 
-
-
+Needed packages: PySimpleGUI, tabulate, googletrans, verbecc3 (scikit-learn)
 '''
 
 import VOC_class
+from Utilities import conjugate
+
+# GUI
 import PySimpleGUI as sg
+
+# nice table
 from tabulate import tabulate
+
+# google translate package
 from googletrans import Translator
+
 
 ##########################################
 # initializing vocabulary list and class
@@ -17,12 +31,12 @@ from googletrans import Translator
 WS = VOC_class.VOC()
 keys = WS.keys
 
-###################################
-# Language source for googletrans
-###################################
+##############################################
+# Conjugation function and languages
+##############################################
 
-lang_src = 'french'
-lang_dest = 'german'
+lang_src = 'german'
+lang_dest = 'french'
 
 ############################
 # initializing GUI window
@@ -33,25 +47,31 @@ sg.theme('DarkAmber')   # Add a touch of color
 # ----- Full layout -----
 new_word_layout = []
 for k in keys:
-    new_word_layout.append([sg.Text(k+' :', size=(10,1)), sg.InputText(key=k)])
+    new_word_layout.append([sg.Text(k+' :', size=(10, 1)), sg.InputText(key=k)])
 
-layout =[
+layout = [
+        [sg.Menu([['&Source language', ['&french', '&german']],
+                  ['&About']])],
         [sg.Text("TEST YOUR SKILLS", size=(35, 1), justification='center', relief=sg.RELIEF_RIDGE)],
-        [sg.Button("Generate word", key="-generate-"), sg.In(enable_events=True, key="-word_to_translate-", size=(35, 1))],
+        [sg.Button("Generate word", key="-generate-"), sg.In(enable_events=True,
+                                                             key="-word_to_translate-", size=(35, 1))],
         [sg.Text("Enter translation: "), sg.InputText(size=(35, 1)), sg.Button('Check', key="-check-")],
         [sg.Text('', key='-answer-', size=(35, 1))],
         [sg.Text('')],
+        [sg.Text("GET INFORMATION", size=(35, 1), justification='center', relief=sg.RELIEF_RIDGE)],
         [sg.Button("ASK GOOGLE", enable_events=True, key='-google-'), sg.In(key='-google_to_translate-', size=(35, 1))],
         [sg.Text('', key='-google_answer-', size=(35, 1))],
+        [sg.Button("CONJUGATE", enable_events=True, key='-conjugate-'),
+                      sg.In(key='-to_conjugate-', size=(35, 1))],
         [sg.Text('')],
         [sg.HSeparator()],
         [sg.Text('')],
-        [sg.Text("ADD A NEW WORD TO YOUR PERSONAL LIST", size=(70, 1), justification='center',relief=sg.RELIEF_RIDGE)],
+        [sg.Text("ADD A NEW WORD TO YOUR PERSONAL LIST", size=(70, 1), justification='center', relief=sg.RELIEF_RIDGE)],
         [sg.Frame(title="New word to add", layout=new_word_layout), sg.Button('ADD', key="-add_word-")],
         [sg.Text('')],
         [sg.HSeparator()],
         [sg.Text('')],
-        [sg.Text("DISPLAY YOUR PERSONAL LIST", size=(70, 1), justification='center',relief=sg.RELIEF_RIDGE)],
+        [sg.Text("DISPLAY YOUR PERSONAL LIST", size=(70, 1), justification='center', relief=sg.RELIEF_RIDGE)],
         [sg.Button('SHOW LIST', enable_events=True, key='-show_list-')],
         [sg.Text('')],
         [sg.HSeparator()],
@@ -59,7 +79,7 @@ layout =[
         [sg.Cancel("Exit")],
         ]
 # Create the window
-window = sg.Window("Build vocabulary list", layout)
+window = sg.Window("French-German vocabulary", layout)
 
 word = None
 
@@ -74,6 +94,15 @@ while True:
 
     # remove printed message
     window['-answer-'].update('')
+
+    # Change source and destination language
+    # ----------------------------------------
+    if event == '&french':
+        lang_src = 'french'
+        lang_dest = 'german'
+    if event == "&german":
+        lang_src = 'german'
+        lang_dest = 'french'
 
     #  Translate from list
     # ----------------------------
@@ -107,9 +136,45 @@ while True:
         if len(window["-google_to_translate-"].get()) == 0:
             sg.popup('You have to enter a word to translate !', title='Error')
         else:
-            # translation is a classe that contains several information in addtion to the translation
-            translation = Translator().translate(str(window['-google_to_translate-'].get()), src=lang_src, dest=lang_dest)
-            window['-google_answer-'].update('Translation: '+translation.text)
+            # translation is a class that contains several information in addition to the translation
+            translation = Translator().translate(str(window['-google_to_translate-'].get())
+                                   , src=lang_src, dest=lang_dest)
+            # if text too long, print in external window
+            if len(translation.text) < 20:
+                window['-google_answer-'].update('Translation: '+translation.text)
+            else:
+                new_window = sg.Window('Translated text',
+                                       [
+                                           [sg.Text(translation.text)],
+                                           [sg.Button('OK', key='-exit-')]
+                                       ])
+                while True:
+                    ev, val = new_window.read()
+                    if ev == sg.WIN_CLOSED:
+                        break
+                    if ev == '-exit-':
+                        break
+
+    #
+    # Conjugate
+    # ------------------------
+
+    if event == '-conjugate-':
+        verb = window['-to_conjugate-'].get()
+        if len(verb) == 0:
+            sg.popup('You have to enter a verb to conjugate !', title='Error')
+        else:
+            # conjugate and return table of conjugation
+            table_display = conjugate(verb, lang_dest)
+            # open window with conjugation information
+            new_layout = [[sg.Column(table_display)], [sg.Button('Close', key='-close-')]]
+            new_window = sg.Window('Conjugation table of {}'.format(verb), layout=new_layout)
+            while True:
+                ev, val = new_window.read()
+                if ev == sg.WIN_CLOSED:
+                    break
+                if ev == '-close-':
+                    break
 
     # Add word to my_list
     # -----------------------
@@ -143,6 +208,7 @@ while True:
                     break
                 if ev == '-yes-':
                     WS.add_word(new_word)
+                    break
                 if ev == '-no-':
                     break
 
