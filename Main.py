@@ -55,7 +55,8 @@ layout = [
         [sg.Text("TEST YOUR SKILLS", size=(35, 1), justification='center', relief=sg.RELIEF_RIDGE)],
         [sg.Button("Generate word", key="-generate-"), sg.In(enable_events=True,
                                                              key="-word_to_translate-", size=(35, 1))],
-        [sg.Text("Enter translation: "), sg.InputText(size=(35, 1)), sg.Button('Check', key="-check-")],
+        [sg.Text("Enter translation: "), sg.InputText(size=(35, 1), key="-translation-"), sg.Button('Check',
+                                                                                                    key="-check-")],
         [sg.Text('', key='-answer-', size=(35, 1))],
         [sg.Text('')],
         [sg.Text("GET INFORMATION", size=(35, 1), justification='center', relief=sg.RELIEF_RIDGE)],
@@ -115,6 +116,7 @@ while True:
             ev, val = new_window.read()
             if ev == sg.WIN_CLOSED:
                 break
+        new_window.close()
 
     #  Translate from list
     # ----------------------------
@@ -125,15 +127,15 @@ while True:
         window["-word_to_translate-"].update(word[keys[0]])
 
     if event == "-check-":
-        if word is None:
-            sg.popup("You have to generate a word to translate before given a translation !!", title='Error')
+        if len(window["-word_to_translate-"].get()) == 0:
+            sg.popup("You have to generate a word to translate before looking for the translation !!", title='Error')
         else:
             # check if translation is correct
-            if values[0] in word[keys[1]]:
+            if values["-translation-"] in word[keys[1]]:
                 # print message bellow
                 window['-answer-'].update('Correct !')
             # check if synonym
-            elif values[0] in word[keys[7]]:
+            elif values["-translation-"] in word[keys[7]]:
                 # print messsage bellow
                 window['-answer-'].update('Correct but a better translation would be {}'.format(word[keys[1]]))
             else:
@@ -179,14 +181,9 @@ while True:
             # conjugate and return table of conjugation
             table_display = conjugate(verb, lang_dest)
             # open window with conjugation information
-            new_layout = [[sg.Column(table_display)], [sg.Button('Close', key='-close-')]]
-            new_window = sg.Window('Conjugation table of {}'.format(verb), layout=new_layout)
-            while True:
-                ev, val = new_window.read()
-                if ev == sg.WIN_CLOSED:
-                    break
-                if ev == '-close-':
-                    break
+            sg.Window('Conjugation table of {}'.format(verb), layout=[[sg.Column(table_display)]]).read()
+
+
 
     # Add word to my_list
     # -----------------------
@@ -214,7 +211,6 @@ while True:
                                ])
             # read event in new window
             while True:
-                # todo: yes and no events do not work
                 ev, val = new_window.read()
                 if ev == sg.WIN_CLOSED:
                     break
@@ -223,6 +219,7 @@ while True:
                     break
                 if ev == '-no-':
                     break
+            new_window.close()
 
     # -- Show list --
     if event == "-show_list-":
