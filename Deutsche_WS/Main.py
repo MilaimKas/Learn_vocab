@@ -107,7 +107,7 @@ while True:
 
     # Show Readme file
     if event == '&About':
-        text = open("README.md", 'r').read()
+        text = open("../README.md", 'r').read()
         new_window = sg.Window('About',
                                [
                                    [sg.Text(text, text_color='white')]
