@@ -11,8 +11,8 @@ additional features to look at:
 Needed packages: PySimpleGUI, tabulate, googletrans, verbecc3 (scikit-learn)
 '''
 
-import VOC_class
-from Utilities import conjugate
+from Deutsche_WS import VOC_class
+from Deutsche_WS.Utilities import conjugate
 
 # GUI
 import PySimpleGUI as sg

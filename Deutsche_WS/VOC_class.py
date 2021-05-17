@@ -9,7 +9,7 @@ field_sep = "[,:;\t]"
 
 # WS List class
 class VOC():
-    def __init__(self, fout="list_files/my_list_example.txt"):
+    def __init__(self, fout="Deutsche_WS/list_files/my_list_example.txt"):
         '''
         List of words
         --> my_list_example.txt: list of words with relevant fields store in 6th line
