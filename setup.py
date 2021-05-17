@@ -8,7 +8,7 @@ setup(
     author='Milaim Kas',
     author_email='milaim.kas@gmail.com',
     license='MIT License',
-    packages=['pyexample'],
+    packages=['Deutsche_WS'],
     install_requires=['PySimpleGUI',
                       'tabulate',
                       'googletrans',

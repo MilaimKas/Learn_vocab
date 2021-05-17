@@ -9,7 +9,7 @@ field_sep = "[,:;\t]"
 
 # WS List class
 class VOC():
-    def __init__(self, fout="my_list_example.txt"):
+    def __init__(self, fout="list_files/my_list_example.txt"):
         '''
         List of words
         --> my_list_example.txt: list of words with relevant fields store in 6th line
@@ -59,6 +59,22 @@ class VOC():
 
         self.extra_key = []
         self.extra_list = []
+
+    def change_list(self, fout):
+        '''
+        Use an other stored list of vocabulary
+        If not present, creates it
+
+        :param: name of the file
+        :return:
+        '''
+
+        fout = 'list_files/'+fout
+
+        #if fout.exist():
+        #else:
+
+
 
     def add_extra_list(self, f_extra, key):
         # todo: add possibility to change already stored world

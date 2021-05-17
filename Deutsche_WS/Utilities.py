@@ -111,3 +111,16 @@ def conjugate(verb, lang):
     #    w = duden.get(verb)
 
     #    return
+
+def headers():
+
+    str = "#####################################\n" \
+          "#      List of vocabulary           #\n" \
+          "#####################################\n" \
+          "# format: field sep field sep ... sep\n" \
+          "#\n"\
+          "# Ordered fields\n"\
+          "# word,translation,type,article,plural,theme,example,synonym\n" \
+          "#"
+
+    return str
