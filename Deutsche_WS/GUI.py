@@ -12,18 +12,15 @@ Needed packages: PySimpleGUI, tabulate, googletrans, verbecc3 (scikit-learn)
 '''
 
 from Deutsche_WS import VOC_class
-from Deutsche_WS.Utilities import conjugate
-
+from Deutsche_WS.Utilities import *
 # GUI
 import PySimpleGUI as sg
-
 # nice table
 from tabulate import tabulate
-
 # google translate package
 from googletrans import Translator
 
-def Main():
+def launch_gui():
 
 ##########################################
 # initializing vocabulary list and class
@@ -51,8 +48,8 @@ def Main():
         new_word_layout.append([sg.Text(k+' :', size=(10, 1)), sg.InputText(key=k)])
 
     layout = [
-            [sg.Menu([['&Source language', ['&french', '&german']],
-                      ['&About']])],
+            [sg.Menu([['&Source language', ['&french', '&german']],['&list', [WS.list_of_lists()]],
+                      ['&About', '&Read me']], tearoff=False)],
             [sg.Text("TEST YOUR SKILLS", size=(35, 1), justification='center', relief=sg.RELIEF_RIDGE)],
             [sg.Button("Generate word", key="-generate-"), sg.In(enable_events=True,
                                                                  key="-word_to_translate-", size=(35, 1))],
@@ -61,7 +58,7 @@ def Main():
             [sg.Text('', key='-answer-', size=(35, 1))],
             [sg.Text('')],
             [sg.Text("GET INFORMATION", size=(35, 1), justification='center', relief=sg.RELIEF_RIDGE)],
-            [sg.Button("ASK GOOGLE", enable_events=True, key='-google-'), sg.In(key='-google_to_translate-', size=(35, 1))],
+            [sg.Button("ASK GOOGLE (internet connexion needed)", enable_events=True, key='-google-'), sg.In(key='-google_to_translate-', size=(35, 1))],
             [sg.Text('', key='-google_answer-', size=(35, 1))],
             [sg.Button("CONJUGATE", enable_events=True, key='-conjugate-'),
                       sg.In(key='-to_conjugate-', size=(35, 1))],
@@ -99,15 +96,20 @@ def Main():
 
         # Change source and destination language
         # ----------------------------------------
-        if event == '&french':
+
+        if event == 'french':
             lang_src = 'french'
+            conjugate = conjugate_fr
             lang_dest = 'german'
-        if event == "&german":
+        if event == "german":
             lang_src = 'german'
+            conjugate = conjugate_de
             lang_dest = 'french'
 
         # Show Readme file
-        if event == '&About':
+        # ----------------------------------
+
+        if event == 'Read me':
             text = open("../README.md", 'r').read()
             new_window = sg.Window('About',
                                    [
@@ -118,6 +120,14 @@ def Main():
                 if ev == sg.WIN_CLOSED:
                     break
             new_window.close()
+
+        # Change my_list file
+        # ------------------------------
+
+        for l in WS.list_of_lists():
+            l = l.replace('&','')
+            if event == l:
+                WS.change_list(l)
 
         #  Translate from list
         # ----------------------------
@@ -180,7 +190,7 @@ def Main():
                 sg.popup('You have to enter a verb to conjugate !', title='Error')
             else:
                 # conjugate and return table of conjugation
-                table_display = conjugate(verb, lang_dest)
+                table_display = conjugate(verb)
                 # open window with conjugation information
                 sg.Window('Conjugation table of {}'.format(verb), layout=[[sg.Column(table_display)]]).read()
 
@@ -224,7 +234,6 @@ def Main():
 
         # -- Show list --
         if event == "-show_list-":
-            # todo: sort my_list alphabetically
             table = tabulate(WS.my_list, headers=keys, tablefmt='rst')
             sg.Window('My list of vocabulary in alphabetical order',
                       [[sg.Text(table, font='Courier', text_color='white')]]).read()
@@ -235,3 +244,5 @@ def Main():
 
     window.close()
 
+if __name__ == '__main__':
+    launch_gui()

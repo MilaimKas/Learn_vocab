@@ -7,25 +7,58 @@ import re
 
 field_sep = "[,:;\t]"
 
+# functions
+
+def headers():
+
+    str = "#####################################\n" \
+          "#      List of vocabulary           #\n" \
+          "#####################################\n" \
+          "# format: field sep field sep ... sep\n" \
+          "#\n"\
+          "# Ordered fields\n"\
+          "# word,translation,type,article,plural,theme,example,synonym\n" \
+          "#"
+
+    return str
+
 # WS List class
 class VOC():
-    def __init__(self, fout="Deutsche_WS/list_files/my_list_example.txt"):
+    def __init__(self, fout="my_list_example.txt"):
         '''
         List of words
         --> my_list_example.txt: list of words with relevant fields store in 6th line
         '''
 
-        self.fout = fout
+        # my_list in dictionary format
+        self.my_dict = []
+        # my_list in list format
+        self.my_list = []
+        # list of keys
+        self.keys = []
+
+        # initialize list
+        self.initialize_list(fout)
+
+        # external list
+        self.extra_key = []
+        self.extra_list = []
+
+    def header(self):
+        return headers()
+
+    def initialize_list(self, fout):
+
+        fout = 'list_files/'+fout
 
         # my_list in dictionary format
         self.my_dict = []
         # my_list in list format
         self.my_list = []
+        # list of keys
+        self.keys = []
 
-        # initialize list
-        # ------------------------------------------
-
-        with open(self.fout, 'r') as file:
+        with open(fout, 'r', encoding='utf-8') as file:
 
             Lines = file.readlines()
             tmp_str = Lines[6][2:-1] # remove \n
@@ -57,26 +90,33 @@ class VOC():
                 self.my_dict.append(word)
         del tmp_str
 
-        self.extra_key = []
-        self.extra_list = []
+        self.fout = fout
 
     def change_list(self, fout):
         '''
         Use an other stored list of vocabulary
         If not present, creates it
 
-        :param: name of the file
+        :param: name of the file without extension
         :return:
         '''
 
-        fout = 'list_files/'+fout
+        import os
+        import Utilities
 
-        #if fout.exist():
-        #else:
+        fout = fout+'.txt'
 
+        if not os.path.exists('list_files/'+fout):
+            os.mknod(fout)
+            # write headers
+            with open(fout, 'a', encoding='utf-8') as file:
+                head = headers()
+                file.write(head)
+                self.initialize_list(fout)
+        else:
+            self.initialize_list(fout)
 
-
-    def add_extra_list(self, f_extra, key):
+    def add_external_list(self, f_extra, key):
         # todo: add possibility to change already stored world
         '''
         add additional list of words from file with given keys
@@ -132,7 +172,7 @@ class VOC():
         if not stored:
 
             # print new word in my_list_example.txt
-            with open(self.fout, 'a') as file:
+            with open(self.fout, 'a', encoding='utf-8') as file:
                 file.write(','.join(add_word)+','+'\n')
 
             # append my_list
@@ -153,6 +193,12 @@ class VOC():
 
         return random.choice(tot_list)
 
+    def list_of_lists(self):
+        import os
+        tmp = os.listdir('list_files')
+        return ['&'+ l[:-4] for l in tmp]
+
+
 
 if __name__ == '__main__':
 
@@ -162,3 +208,5 @@ if __name__ == '__main__':
     WS.add_word(["leichtsinnig", "inconsidéré", "adjectiv", "", "", "", "", ""])
     print(WS.my_dict[-1])
     print(WS.my_list[-1])
+
+    print(WS.list_of_lists())
