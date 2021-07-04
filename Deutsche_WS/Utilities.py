@@ -106,7 +106,7 @@ def conjugate_de(verb):
     # use duden
     w = duden.get(verb)
 
-    w_arr = np.full((6, 7, 2), None)   # 5 tenses, 6 personnel noun and tense form
+    w_arr = np.full((7, 7, 2), None)   # 5 tenses, 6 personnel noun and tense form
     table = []
 
     # Infinitiv
@@ -132,7 +132,7 @@ def conjugate_de(verb):
     w_arr[2, 0, 0] = "{:-<18}".format('')
     w_arr[2, 0, 1] = "{:-<25}".format('INDIKATIV' + ' ' + 'PRATERITUM')
     tmp = prateritum[0::2]
-    for j in range(1, 6):
+    for j in range(6):
         form = tmp[j].split()
         # personal prenoun and form
         w_arr[2, j+1, 0] = "{:<18}".format(form[0])
@@ -144,7 +144,7 @@ def conjugate_de(verb):
     w_arr[3, 0, 0] = "{:-<18}".format('')
     w_arr[3, 0, 1] = "{:-<25}".format('KONJUNKTIV I' + ' ' + 'PRASENS')
     tmp = prasens[1::3]
-    for j in range(1, 6):
+    for j in range(6):
         form = tmp[j].split()
         # personal prenoun and form
         w_arr[3, j+1, 0] = "{:<18}".format(form[0])
@@ -154,9 +154,9 @@ def conjugate_de(verb):
 
      # Konjunktiv II
     w_arr[4, 0, 0] = "{:-<18}".format('')
-    w_arr[4, 0, 1] = "{:-<25}".format('KONJUNKTIV II' + ' ' + 'PRASENS')
+    w_arr[4, 0, 1] = "{:-<25}".format('KONJUNKTIV II' + ' ' + 'PRATERITUM')
     tmp = prateritum[1::2]
-    for j in range(1, 6):
+    for j in range(6):
         form = tmp[j].split()
         # personal prenoun and form
         w_arr[4, j+1, 0] = "{:<18}".format(form[0])
@@ -170,15 +170,19 @@ def conjugate_de(verb):
     tmp = prasens[2::3]
     w_arr[5, 1, 0] = "{:-<18}".format('')
     w_arr[5, 4, 0] = "{:-<18}".format('')
-    w_arr[5, 1, 1] = "{:<25},{}!".format(tmp[1].split()[0], tmp[1].split()[3])
+    w_arr[5, 1, 1] = "{:<25},{}!".format(tmp[1].split()[0], tmp[1].split()[2])
     w_arr[5, 4, 1] = "{:<25}!".format(tmp[4].split()[0])
     tmp = np.where(w_arr[5, :, :] is None, ' ', w_arr[5, :, :])
+    table.append(tabulate(tmp, tablefmt='plain', numalign="center"))
+
+    # blank column
+    tmp = np.where(w_arr[6, :, :] is None, ' ', w_arr[6, :, :])
     table.append(tabulate(tmp, tablefmt='plain', numalign="center"))
 
     # formated sg window
     col = []
     k = 0
-    for i in range(2):  # row
+    for i in range(3):  # row
         row = []
         for j in range(2):  # column
             row.extend([sg.Text(table[k], font='Courier', text_color='white'), sg.VSeparator(color='white')])

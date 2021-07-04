@@ -55,7 +55,7 @@ def launch_gui():
                                                                  key="-word_to_translate-", size=(35, 1))],
             [sg.Text("Enter translation: "), sg.InputText(size=(35, 1), key="-translation-"), sg.Button('Check',
                                                                                                     key="-check-")],
-            [sg.Text('', key='-answer-', size=(35, 1))],
+            [sg.Text('', key='-answer-', size=(50, 1))],
             [sg.Text('')],
             [sg.Text("GET INFORMATION", size=(35, 1), justification='center', relief=sg.RELIEF_RIDGE)],
             [sg.Button("ASK GOOGLE (internet connexion needed)", enable_events=True, key='-google-'), sg.In(key='-google_to_translate-', size=(35, 1))],
