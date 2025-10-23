@@ -1,3 +1,5 @@
+DEPRECATED SINCE 2022
+
 # Learn_vocab
 Written by Milaim Kas: milaim.kas@gmail.com 
 
